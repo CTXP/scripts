@@ -32,6 +32,8 @@ install_dependencies() {
 # Function to download the backup script
 download_backup_script() {
     echo "Downloading the backup script from the URL..."
+    DIR_PATH=$(dirname "$SCRIPT_PATH")
+    sudo mkdir -p "$DIR_PATH"
     if ! curl -s -o "$SCRIPT_PATH" "$SCRIPT_URL"; then
         echo "Failed to download the script from $SCRIPT_URL. Exiting."
         exit 1
