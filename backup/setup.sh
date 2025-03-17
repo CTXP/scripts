@@ -33,14 +33,10 @@ download_backup_script() {
     echo "Downloading the backup script from the URL..."
     DIR_PATH=$(dirname "$SCRIPT_PATH")
     sudo mkdir -p "$DIR_PATH"
-
-    # Capture the error message from curl
-    ERROR_MSG=$(curl -s -w "%{http_code}" -o "$SCRIPT_PATH" "$SCRIPT_URL" 2>&1)
-    HTTP_CODE=$(echo "$ERROR_MSG" | tail -n 1)
-
-    # Check if the HTTP status code indicates a failure
-    if [ "$HTTP_CODE" -ne 200 ]; then
-        echo "Failed to download the script from $SCRIPT_URL. HTTP status code: $HTTP_CODE. Error message: $ERROR_MSG"
+    
+    # Remove the -s option to let curl show output
+    if ! curl -o "$SCRIPT_PATH" "$SCRIPT_URL"; then
+        echo "Failed to download the script from $SCRIPT_URL. Exiting."
         exit 1
     else
         echo "Backup script downloaded successfully to $SCRIPT_PATH."
