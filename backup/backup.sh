@@ -27,7 +27,7 @@ log_message() {
 
 # Mask sensitive information (simple example: remove IPs, email addresses)
 mask_sensitive_data() {
-    sed -e 's/[0-9]\{1,3\}(\.[0-9]\{1,3\})\{3\}/[IP_ADDRESS]/g' \
+    sudo sed -e 's/[0-9]\{1,3\}(\.[0-9]\{1,3\})\{3\}/[IP_ADDRESS]/g' \
         -e 's/[a-zA-Z0-9._%+-]\+@[a-zA-Z0-9.-]\+\.[a-zA-Z]\{2,4\}/[EMAIL]/g' "$1"
 }
 
@@ -46,22 +46,23 @@ send_email() {
 # Backup process
 backup() {
     # Create zip file of directories
+    sudo touch LOG_FILE
     log_message "Starting backup of directories: $DIRECTORIES_TO_BACKUP"
-    zip -r "$BACKUP_FILE" $DIRECTORIES_TO_BACKUP
+    sudo zip -r "$BACKUP_FILE" $DIRECTORIES_TO_BACKUP
 
     if [ $? -eq 0 ]; then
         log_message "Backup completed successfully."
 
         # Encrypt the backup
         log_message "Encrypting the backup file"
-        openssl enc -aes-256-cbc -salt -in "$BACKUP_FILE" -out "$ENCRYPTED_FILE" -pass pass:"$BACKUP_PASSWORD"
+        sudo openssl enc -aes-256-cbc -salt -in "$BACKUP_FILE" -out "$ENCRYPTED_FILE" -pass pass:"$BACKUP_PASSWORD"
 
         if [ $? -eq 0 ]; then
             log_message "Backup encryption successful."
-            mv "$ENCRYPTED_FILE" "$BACKUP_DIR"
+            sudo mv "$ENCRYPTED_FILE" "$BACKUP_DIR"
 
             # Clean up unencrypted zip
-            rm "$BACKUP_FILE"
+            sudo rm "$BACKUP_FILE"
 
             # Send success email with log file attached
             send_email "$SUBJECT_SUCCESS" "Backup completed and encrypted successfully. The file is stored at $BACKUP_DIR/$(basename $ENCRYPTED_FILE)" "$LOG_FILE"
