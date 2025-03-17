@@ -59,12 +59,12 @@ get_user_input() {
 # Function to replace placeholders in the downloaded script with the user's input
 configure_script() {
     echo "Configuring the backup script with your input..."
-    sed -i "s|SMTP_SERVER=\".*\"|SMTP_SERVER=\"$SMTP_SERVER\"|" "$SCRIPT_PATH"
-    sed -i "s|SMTP_PORT=\".*\"|SMTP_PORT=\"$SMTP_PORT\"|" "$SCRIPT_PATH"
-    sed -i "s|SMTP_USER=\".*\"|SMTP_USER=\"$SMTP_USER\"|" "$SCRIPT_PATH"
-    sed -i "s|SMTP_PASSWORD=\".*\"|SMTP_PASSWORD=\"$SMTP_PASSWORD\"|" "$SCRIPT_PATH"
-    sed -i "s|SMTP_RECIPIENT=\".*\"|SMTP_RECIPIENT=\"$SMTP_RECIPIENT\"|" "$SCRIPT_PATH"
-    sed -i "s|BACKUP_PASSWORD=\".*\"|BACKUP_PASSWORD=\"$BACKUP_PASSWORD\"|" "$SCRIPT_PATH"
+    sudo sed -i "s|SMTP_SERVER=\".*\"|SMTP_SERVER=\"$SMTP_SERVER\"|" "$SCRIPT_PATH"
+    sudo sed -i "s|SMTP_PORT=\".*\"|SMTP_PORT=\"$SMTP_PORT\"|" "$SCRIPT_PATH"
+    sudo sed -i "s|SMTP_USER=\".*\"|SMTP_USER=\"$SMTP_USER\"|" "$SCRIPT_PATH"
+    sudo sed -i "s|SMTP_PASSWORD=\".*\"|SMTP_PASSWORD=\"$SMTP_PASSWORD\"|" "$SCRIPT_PATH"
+    sudo sed -i "s|SMTP_RECIPIENT=\".*\"|SMTP_RECIPIENT=\"$SMTP_RECIPIENT\"|" "$SCRIPT_PATH"
+    sudo sed -i "s|BACKUP_PASSWORD=\".*\"|BACKUP_PASSWORD=\"$BACKUP_PASSWORD\"|" "$SCRIPT_PATH"
     echo "Backup script configured successfully."
 }
 
@@ -84,7 +84,7 @@ add_cron_job() {
 make_script_executable() {
     if [ ! -x "$SCRIPT_PATH" ]; then
         echo "Making the backup script executable..."
-        chmod +x "$SCRIPT_PATH"
+        sudo chmod +x "$SCRIPT_PATH"
     else
         echo "Backup script is already executable."
     fi
