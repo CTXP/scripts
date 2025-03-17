@@ -35,7 +35,7 @@ download_backup_script() {
     sudo mkdir -p "$DIR_PATH"
     
     # Remove the -s option to let curl show output
-    if ! curl -o "$SCRIPT_PATH" "$SCRIPT_URL"; then
+    if ! sudo curl -o "$SCRIPT_PATH" "$SCRIPT_URL"; then
         echo "Failed to download the script from $SCRIPT_URL. Exiting."
         exit 1
     else
