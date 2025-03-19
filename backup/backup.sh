@@ -22,13 +22,7 @@ fi
 
 # Logging function
 log_message() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
-}
-
-# Mask sensitive information (simple example: remove IPs, email addresses)
-mask_sensitive_data() {
-    sudo sed -e 's/[0-9]\{1,3\}(\.[0-9]\{1,3\})\{3\}/[IP_ADDRESS]/g' \
-        -e 's/[a-zA-Z0-9._%+-]\+@[a-zA-Z0-9.-]\+\.[a-zA-Z]\{2,4\}/[EMAIL]/g' "$1"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"  | sudo tee -a "$LOG_FILE" > /dev/null
 }
 
 # Send email function with attachment
@@ -37,16 +31,14 @@ send_email() {
     BODY=$2
     ATTACHMENT=$3
 
-    # Mask sensitive data from the log file
-    BODY=$(mask_sensitive_data <<< "$BODY")
-
-    echo -e "Subject:$SUBJECT\n\n$BODY" | mutt -s "$SUBJECT" -a "$ATTACHMENT" -- "$SMTP_RECIPIENT"
+    echo -e "Subject:$SUBJECT\n\n$BODY" | msmtp --attachment="$ATTACHMENT" --from="$SMTP_USER" "$SMTP_RECIPIENT"
 }
+
 
 # Backup process
 backup() {
     # Create zip file of directories
-    sudo touch LOG_FILE
+    sudo touch $LOG_FILE
     log_message "Starting backup of directories: $DIRECTORIES_TO_BACKUP"
     sudo zip -r "$BACKUP_FILE" $DIRECTORIES_TO_BACKUP
 

@@ -4,7 +4,7 @@
 SCRIPT_PATH="/scripts/backup.sh"  # Replace with the actual path to your backup.sh script
 CRON_SCHEDULE="0 0 * * * $SCRIPT_PATH"
 CRON_FILE="/var/spool/cron/crontabs/$(whoami)"
-DEPENDENCIES=("zip" "openssl" "msmtp" "mutt")
+DEPENDENCIES=("zip" "openssl" "msmtp")
 SCRIPT_URL="https://raw.githubusercontent.com/CTXP/scripts/refs/heads/main/backup/backup.sh"  # URL of the backup script
 
 # SMTP and backup password placeholders
@@ -56,6 +56,26 @@ get_user_input() {
     echo
 }
 
+# Function to create the msmtprc configuration file with correct permissions
+create_msmtp_config() {
+    echo "Creating the msmtp configuration file..."
+
+    # Create or overwrite the .msmtprc file in the user's home directory
+    cat > "$HOME/.msmtprc" <<EOL
+account default
+host $SMTP_SERVER
+port $SMTP_PORT
+from $SMTP_USER
+auth on
+user $SMTP_USER
+password $SMTP_PASSWORD
+EOL
+
+    # Set the correct file permissions for the .msmtprc file
+    chmod 600 "$HOME/.msmtprc"
+    echo "msmtp configuration file created and permissions set to 600."
+}
+
 # Function to replace placeholders in the downloaded script with the user's input
 configure_script() {
     echo "Configuring the backup script with your input..."
@@ -94,6 +114,7 @@ make_script_executable() {
 install_dependencies
 download_backup_script
 get_user_input  # Prompt the user for sensitive data
+create_msmtp_config  # Create msmtp configuration with user-provided SMTP details
 configure_script  # Replace placeholders with user-provided data
 make_script_executable
 add_cron_job
