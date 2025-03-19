@@ -60,6 +60,7 @@ get_user_input() {
 create_msmtp_config() {
     echo "Creating the msmtp configuration file..."
 
+    sudo touch "~/.msmtprc"
     # Create or overwrite the .msmtprc file in the user's home directory
     cat > "~/.msmtprc" <<EOL
 account default
