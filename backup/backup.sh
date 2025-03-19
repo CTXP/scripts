@@ -30,7 +30,7 @@ send_email() {
     SUBJECT=$1
     BODY=$2
 
-    echo -e "Subject:$SUBJECT\n\n$BODY" | msmtp --from="$SMTP_USER" "$SMTP_RECIPIENT"
+    echo -e "Subject:$SUBJECT\n\n$BODY" | sudo msmtp --from="$SMTP_USER" "$SMTP_RECIPIENT"
 }
 
 # Backup process

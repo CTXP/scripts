@@ -60,20 +60,19 @@ get_user_input() {
 create_msmtp_config() {
     echo "Creating the msmtp configuration file..."
 
-    sudo touch "~/.msmtprc"
+    sudo touch ~/.msmtprc
     # Create or overwrite the .msmtprc file in the user's home directory
-    cat > "~/.msmtprc" <<EOL
-account default
+    echo "account default
 host $SMTP_SERVER
 port $SMTP_PORT
 from $SMTP_USER
 auth on
 user $SMTP_USER
 password $SMTP_PASSWORD
-EOL
+EOL" | sudo tee ~/.msmtprc
 
     # Set the correct file permissions for the .msmtprc file
-    chmod 600 "~/.msmtprc"
+    sudo chmod 600 ~/.msmtprc
     echo "msmtp configuration file created and permissions set to 600."
 }
 
