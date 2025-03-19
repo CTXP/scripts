@@ -29,11 +29,9 @@ log_message() {
 send_email() {
     SUBJECT=$1
     BODY=$2
-    ATTACHMENT=$3
 
-    echo -e "Subject:$SUBJECT\n\n$BODY" | msmtp --attachment="$ATTACHMENT" --from="$SMTP_USER" "$SMTP_RECIPIENT"
+    echo -e "Subject:$SUBJECT\n\n$BODY" | msmtp --from="$SMTP_USER" "$SMTP_RECIPIENT"
 }
-
 
 # Backup process
 backup() {
@@ -47,7 +45,7 @@ backup() {
 
         # Encrypt the backup
         log_message "Encrypting the backup file"
-        sudo openssl enc -aes-256-cbc -salt -in "$BACKUP_FILE" -out "$ENCRYPTED_FILE" -pass pass:"$BACKUP_PASSWORD"
+        sudo openssl enc -aes-256-cbc -in "$BACKUP_FILE" -out "$ENCRYPTED_FILE" -pass pass:"$BACKUP_PASSWORD" -pbkdf2
 
         if [ $? -eq 0 ]; then
             log_message "Backup encryption successful."

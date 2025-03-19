@@ -61,7 +61,7 @@ create_msmtp_config() {
     echo "Creating the msmtp configuration file..."
 
     # Create or overwrite the .msmtprc file in the user's home directory
-    cat > "$HOME/.msmtprc" <<EOL
+    cat > "~/.msmtprc" <<EOL
 account default
 host $SMTP_SERVER
 port $SMTP_PORT
@@ -72,7 +72,7 @@ password $SMTP_PASSWORD
 EOL
 
     # Set the correct file permissions for the .msmtprc file
-    chmod 600 "$HOME/.msmtprc"
+    chmod 600 "~/.msmtprc"
     echo "msmtp configuration file created and permissions set to 600."
 }
 
